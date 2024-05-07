@@ -1,5 +1,9 @@
 #include <iostream>
 #include <memory>
+#include <vector>
+#include <initializer_list>
+#include <forward_list>
+#include <optional>
 // #include "../lists/main.cpp"
 
 class TypeChecker {
@@ -39,12 +43,36 @@ private:
 template <class Key, class Value>
 class HashTable {
 public:
+    explicit HashTable() = default;
+    explicit HashTable(std::initializer_list<HashNode<Key, Value>> elements) {
+
+    }
+
+    void Insert(Key key, Value value) {
+
+    }
+
+    void Update(Key key, Value value) {
+
+    }
+
+    void Delete(Key key) {
+
+    }
 
 private:
-    std::unique_ptr<Value[]> values; 
+    std::optional<std::forward_list<Value>> values_;
 
-    size_t GetIndex_() {
-        return 5;
+    size_t GetHash_(std::string_view key) {
+        
+    }
+
+    size_t GetHash_(size_t key) {
+        return key;
+    }
+
+    size_t GetIndex_(size_t hash) {
+
     }
 };
 
