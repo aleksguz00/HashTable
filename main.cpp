@@ -2,8 +2,9 @@
 #include <memory>
 #include <vector>
 #include <initializer_list>
-#include <forward_list>
+#include <list>
 #include <optional>
+#include <algorithm>
 // #include "../lists/main.cpp"
 
 class TypeChecker {
@@ -49,19 +50,38 @@ public:
     }
 
     void Insert(Key key, Value value) {
+        size_t index = GetIndex_(key);
 
+        if (!values_[index]) {
+            std::list<HashNode<Key, Value>> list;
+            list.
+            values_[index] = list;
+        }
+        HashNode<Key, Value> node{ key, value };
+        values_[index].pop_back(node);
     }
 
     void Update(Key key, Value value) {
+        size_t index = GetIndex_(key);
 
+        if (!values_[index]) return;
+
+        auto it = std::find_if(values_[index].begin(), values_[index].end(),
+                            [value](const HashNode<Key, Value>& node){ return node.value_ == value; });
+
+        if (it != values_[index].end()) {
+            it->value_ = value;
+        }
     }
 
     void Delete(Key key) {
+        size_t index = GetIndex_(key);
 
+        if (!values_[index]) return;
     }
 
 private:
-    std::optional<std::forward_list<Value>> values_;
+    std::optional<std::list<Value>> values_;
 
     size_t GetHash_(std::string_view key) {
         
@@ -71,8 +91,11 @@ private:
         return key;
     }
 
-    size_t GetIndex_(size_t hash) {
+    size_t GetIndex_(Key key) {
+        size_t hash = GetHash_(key);
 
+        // Add
+        return hash;
     }
 };
 
