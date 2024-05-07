@@ -5,6 +5,7 @@
 #include <list>
 #include <optional>
 #include <algorithm>
+#include <memory>
 // #include "../lists/main.cpp"
 
 class TypeChecker {
@@ -54,7 +55,7 @@ public:
 
         if (!values_[index]) {
             std::list<HashNode<Key, Value>> list;
-            list.
+            // list.remove_if()
             values_[index] = list;
         }
         HashNode<Key, Value> node{ key, value };
@@ -78,13 +79,31 @@ public:
         size_t index = GetIndex_(key);
 
         if (!values_[index]) return;
+
+        if (values_[index].size() < 2) {
+            values_[index].pop_back();
+            values_[index] = nullptr;
+
+            return;
+        }
+
+        values_[index].remove_if([key](const HashNode<Key, Value>& node) {
+            return node.key_ == key;
+        });
     }
 
 private:
     std::optional<std::list<Value>> values_;
+    const std::unique_ptr<size_t[]> sizes = std::make_unique<size_t[]>(GetSizes_());
 
     size_t GetHash_(std::string_view key) {
-        
+        size_t hash = 0;
+
+        for (size_t i; i < key.size(); ++i) {
+            hash = (hash << 5) - hash + static_cast<size_t>(key[i]);
+        }
+
+        return hash;
     }
 
     size_t GetHash_(size_t key) {
@@ -94,8 +113,12 @@ private:
     size_t GetIndex_(Key key) {
         size_t hash = GetHash_(key);
 
-        // Add
+        // Add %
         return hash;
+    }
+
+    std::unique_ptr<size_t[]> GetSizes_() {
+        // Make it easier by pre-defined array or make func
     }
 };
 
