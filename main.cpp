@@ -6,6 +6,7 @@
 #include <optional>
 #include <algorithm>
 #include <memory>
+#include <math.h>
 // #include "../lists/main.cpp"
 
 class TypeChecker {
@@ -94,7 +95,7 @@ public:
 
 private:
     std::optional<std::list<Value>> values_;
-    const std::unique_ptr<size_t[]> sizes = std::make_unique<size_t[]>(GetSizes_());
+    static constexpr std::unique_ptr<size_t[]> sizes = std::make_unique<size_t[]>(GetSizes_());
 
     size_t GetHash_(std::string_view key) {
         size_t hash = 0;
@@ -117,11 +118,29 @@ private:
         return hash;
     }
 
-    std::unique_ptr<size_t[]> GetSizes_() {
-        // Make it easier by pre-defined array or make func
+    static constexpr std::unique_ptr<size_t[]> GetSizes_() {
+        uint32_t size = pow(2, sizeof(uint32_t) * 8);
+
+        std::unique_ptr<size_t[]> sizes = std::make_unique<size_t[]>(size);
+
+        for (size_t i = 0; i < size; ++i) {
+            if ((i & (i + 1)) == 0) {
+                continue;;
+            }
+
+            if ((i & (i + 1)) == 1) {
+                continue;
+            }
+
+            sizes[i] = i;
+        }
+
+        return sizes;
     }
 };
 
 int main() {
-    HashNode<bool, int> hash = HashNode<bool, int>(true, 2);
+    // HashNode<bool, int> hash = HashNode<bool, int>(true, 2);
+
+    std::cout << pow(2, sizeof(uint32_t) * 8) << '\n';
 }
